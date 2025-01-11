@@ -45,6 +45,6 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
         <PackageReference Include="Soenneker.Git.Util" Version="3.0.2274" />
         <PackageReference Include="Soenneker.Utils.File" Version="3.0.1563" />
-        <PackageReference Include="Soenneker.Utils.FileSync" Version="3.0.1285" />
+        <PackageReference Include="Soenneker.Utils.FileSync" Version="3.0.1289" />
     </ItemGroup>
 </Project>
