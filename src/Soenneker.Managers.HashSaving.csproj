@@ -43,7 +43,7 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Git.Util" Version="3.0.2424" />
-        <PackageReference Include="Soenneker.Utils.File" Version="3.0.1647" />
+        <PackageReference Include="Soenneker.Utils.File" Version="3.0.1655" />
         <PackageReference Include="Soenneker.Utils.FileSync" Version="3.0.1403" />
     </ItemGroup>
 </Project>
