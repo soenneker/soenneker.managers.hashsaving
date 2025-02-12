@@ -17,11 +17,10 @@ public static class HashSavingManagerRegistrar
     /// </summary>
     public static IServiceCollection AddHashSavingManagerAsSingleton(this IServiceCollection services)
     {
-        services.AddFileUtilAsSingleton();
-        services.AddGitUtilAsSingleton();
-        services.AddFileUtilSyncAsSingleton();
-
-        services.TryAddSingleton<IHashSavingManager, HashSavingManager>();
+        services.AddFileUtilAsSingleton()
+                .AddGitUtilAsSingleton()
+                .AddFileUtilSyncAsSingleton()
+                .TryAddSingleton<IHashSavingManager, HashSavingManager>();
 
         return services;
     }
@@ -31,11 +30,10 @@ public static class HashSavingManagerRegistrar
     /// </summary>
     public static IServiceCollection AddHashSavingManagerAsScoped(this IServiceCollection services)
     {
-        services.AddFileUtilAsScoped();
-        services.AddGitUtilAsScoped();
-        services.AddFileUtilSyncAsScoped();
-
-        services.TryAddScoped<IHashSavingManager, HashSavingManager>();
+        services.AddFileUtilAsScoped()
+                .AddGitUtilAsScoped()
+                .AddFileUtilSyncAsScoped()
+                .TryAddScoped<IHashSavingManager, HashSavingManager>();
 
         return services;
     }

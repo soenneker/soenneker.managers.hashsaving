@@ -18,11 +18,7 @@ public class HashSavingManager : IHashSavingManager
     private readonly IFileUtilSync _fileUtilSync;
     private readonly IGitUtil _gitUtil;
 
-    public HashSavingManager(
-        ILogger<HashSavingManager> logger,
-        IFileUtil fileUtil,
-        IFileUtilSync fileUtilSync,
-        IGitUtil gitUtil)
+    public HashSavingManager(ILogger<HashSavingManager> logger, IFileUtil fileUtil, IFileUtilSync fileUtilSync, IGitUtil gitUtil)
     {
         _logger = logger;
         _fileUtil = fileUtil;
@@ -47,6 +43,7 @@ public class HashSavingManager : IHashSavingManager
         // Stage the new hash file
         _gitUtil.AddIfNotExists(gitDirectory, targetHashFile);
 
-        await _gitUtil.CommitAndPush(gitDirectory, username, name, email, token, "Updates hash for new version").NoSync();
+        await _gitUtil.CommitAndPush(gitDirectory, username, name, email, token, "Updates hash for new version")
+                      .NoSync();
     }
 }
