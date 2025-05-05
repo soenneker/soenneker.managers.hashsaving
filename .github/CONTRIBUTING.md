@@ -1,4 +1,4 @@
-# Contributing to Soenneker.Managers.HashSaving
+﻿# Contributing to Soenneker.Managers.HashSaving
 
 We're excited that you're interested in contributing!
 
