@@ -11,7 +11,7 @@ using Soenneker.Utils.FileSync.Abstract;
 namespace Soenneker.Managers.HashSaving;
 
 /// <inheritdoc cref="IHashSavingManager"/>
-public class HashSavingManager : IHashSavingManager
+public sealed class HashSavingManager : IHashSavingManager
 {
     private readonly ILogger<HashSavingManager> _logger;
     private readonly IFileUtil _fileUtil;
@@ -34,7 +34,7 @@ public class HashSavingManager : IHashSavingManager
         // Write new hash
         string targetHashFile = Path.Combine(gitDirectory, hashFileName);
         _fileUtilSync.DeleteIfExists(targetHashFile);
-        await _fileUtil.Write(targetHashFile, newHash, cancellationToken);
+        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
 
         // Clean up the resource file from the repo
         string resourceFile = Path.Combine(gitDirectory, "src", "Resources", fileName);
@@ -43,7 +43,7 @@ public class HashSavingManager : IHashSavingManager
         // Stage the new hash file
         _gitUtil.AddIfNotExists(gitDirectory, targetHashFile);
 
-        await _gitUtil.CommitAndPush(gitDirectory, username, name, email, token, "Updates hash for new version")
+        await _gitUtil.CommitAndPush(gitDirectory, username, name, email, token, "Updates hash for new version", cancellationToken)
                       .NoSync();
     }
 }
