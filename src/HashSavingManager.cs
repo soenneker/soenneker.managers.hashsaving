@@ -43,7 +43,7 @@ public sealed class HashSavingManager : IHashSavingManager
         // Stage the new hash file
         _gitUtil.AddIfNotExists(gitDirectory, targetHashFile);
 
-        await _gitUtil.CommitAndPush(gitDirectory, username, name, email, token, "Updates hash for new version", cancellationToken)
+        await _gitUtil.CommitAndPush(gitDirectory, name, email, token, "Updates hash for new version", cancellationToken)
                       .NoSync();
     }
 }
