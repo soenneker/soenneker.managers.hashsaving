@@ -44,7 +44,7 @@ public sealed class HashSavingManager : IHashSavingManager
         _fileUtilSync.DeleteIfExists(resourceFile);
 
         // Stage the new hash file
-        _gitUtil.AddIfNotExists(gitDirectory, targetHashFile);
+        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
 
         await _gitUtil.CommitAndPush(gitDirectory, name, email, token, "Updates hash for new version", cancellationToken)
                       .NoSync();
@@ -63,7 +63,7 @@ public sealed class HashSavingManager : IHashSavingManager
         _directoryUtil.Delete(targetDir);
 
         // Stage the new hash file
-        _gitUtil.AddIfNotExists(gitDirectory, targetHashFile);
+        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
 
         await _gitUtil.CommitAndPush(gitDirectory, name, email, token, "Updates hash for new version", cancellationToken)
                       .NoSync();
