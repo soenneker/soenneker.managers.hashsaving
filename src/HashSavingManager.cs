@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Soenneker.Git.Util.Abstract;
 using Soenneker.Utils.File.Abstract;
 using Soenneker.Extensions.ValueTask;
-using Soenneker.Utils.FileSync.Abstract;
 using Soenneker.Utils.Directory.Abstract;
 
 namespace Soenneker.Managers.HashSaving;
@@ -16,15 +15,13 @@ public sealed class HashSavingManager : IHashSavingManager
 {
     private readonly ILogger<HashSavingManager> _logger;
     private readonly IFileUtil _fileUtil;
-    private readonly IFileUtilSync _fileUtilSync;
     private readonly IGitUtil _gitUtil;
     private readonly IDirectoryUtil _directoryUtil;
 
-    public HashSavingManager(ILogger<HashSavingManager> logger, IFileUtil fileUtil, IFileUtilSync fileUtilSync, IGitUtil gitUtil, IDirectoryUtil directoryUtil)
+    public HashSavingManager(ILogger<HashSavingManager> logger, IFileUtil fileUtil, IGitUtil gitUtil, IDirectoryUtil directoryUtil)
     {
         _logger = logger;
         _fileUtil = fileUtil;
-        _fileUtilSync = fileUtilSync;
         _gitUtil = gitUtil;
         _directoryUtil = directoryUtil;
     }
@@ -36,12 +33,12 @@ public sealed class HashSavingManager : IHashSavingManager
 
         // Write new hash
         string targetHashFile = Path.Combine(gitDirectory, hashFileName);
-        _fileUtilSync.DeleteIfExists(targetHashFile);
+        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken).NoSync();
         await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
 
         // Clean up the resource file from the repo
         string resourceFile = Path.Combine(gitDirectory, "src", "Resources", fileName);
-        _fileUtilSync.DeleteIfExists(resourceFile);
+        await _fileUtil.DeleteIfExists(resourceFile, cancellationToken: cancellationToken).NoSync();
 
         // Stage the new hash file
         await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
@@ -57,7 +54,7 @@ public sealed class HashSavingManager : IHashSavingManager
 
         // Write new hash
         string targetHashFile = Path.Combine(gitDirectory, hashFileName);
-        _fileUtilSync.DeleteIfExists(targetHashFile);
+        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken).NoSync();
         await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
 
         _directoryUtil.Delete(targetDir);

@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Git.Util.Registrars;
 using Soenneker.Managers.HashSaving.Abstract;
 using Soenneker.Utils.File.Registrars;
-using Soenneker.Utils.FileSync.Registrars;
 
 namespace Soenneker.Managers.HashSaving.Registrars;
 
@@ -19,7 +18,6 @@ public static class HashSavingManagerRegistrar
     {
         services.AddFileUtilAsSingleton()
                 .AddGitUtilAsSingleton()
-                .AddFileUtilSyncAsSingleton()
                 .TryAddSingleton<IHashSavingManager, HashSavingManager>();
 
         return services;
@@ -32,7 +30,6 @@ public static class HashSavingManagerRegistrar
     {
         services.AddFileUtilAsScoped()
                 .AddGitUtilAsScoped()
-                .AddFileUtilSyncAsScoped()
                 .TryAddScoped<IHashSavingManager, HashSavingManager>();
 
         return services;
