@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.Extensions.Logging;
+using Soenneker.Extensions.Task;
 using Soenneker.Git.Util.Abstract;
 using Soenneker.Utils.File.Abstract;
 using Soenneker.Extensions.ValueTask;
