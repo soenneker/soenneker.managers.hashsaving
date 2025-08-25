@@ -27,6 +27,21 @@ public sealed class HashSavingManager : IHashSavingManager
         _directoryUtil = directoryUtil;
     }
 
+    public async ValueTask SaveHashToGitRepoWithoutClearingResources(string gitDirectory, string newHash, string hashFileName, string name, string email, string token,
+        CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Saving hash to Git repo...");
+
+        string targetHashFile = Path.Combine(gitDirectory, hashFileName);
+        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken).NoSync();
+        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
+
+        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
+
+        await _gitUtil.CommitAndPush(gitDirectory, "Updates hash for new version", token, name, email, cancellationToken)
+                      .NoSync();
+    }
+
     public async ValueTask SaveHashToGitRepoAsFile(string gitDirectory, string newHash, string fileName, string hashFileName, string name, string email, string username, string token,
         CancellationToken cancellationToken = default)
     {
