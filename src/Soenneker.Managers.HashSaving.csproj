@@ -41,7 +41,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Git.Util" Version="4.0.3153" PrivateAssets="analyzers;build" />
+        <PackageReference Include="Soenneker.Git.Util" Version="4.0.3154" PrivateAssets="analyzers;build" />
         <PackageReference Include="Soenneker.Utils.File" Version="4.0.2014" />
     </ItemGroup>
 </Project>
