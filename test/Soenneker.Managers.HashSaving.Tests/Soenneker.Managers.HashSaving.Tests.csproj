@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Soenneker.Managers.HashSaving.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Managers.HashSaving\Soenneker.Managers.HashSaving.csproj" />
     </ItemGroup>
 
     <ItemGroup>
