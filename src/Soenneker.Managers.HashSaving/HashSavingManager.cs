@@ -27,56 +27,66 @@ public sealed class HashSavingManager : IHashSavingManager
         _directoryUtil = directoryUtil;
     }
 
-    public async ValueTask SaveHashToGitRepoWithoutClearingResources(string gitDirectory, string newHash, string hashFileName, string name, string email, string token,
-        CancellationToken cancellationToken = default)
+    public async ValueTask SaveHashToGitRepoWithoutClearingResources(string gitDirectory, string newHash, string hashFileName, string name, string email,
+        string token, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Saving hash to Git repo...");
 
         string targetHashFile = Path.Combine(gitDirectory, hashFileName);
-        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken).NoSync();
-        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
+        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken)
+                       .NoSync();
+        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken)
+                       .NoSync();
 
-        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
+        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken)
+                      .NoSync();
 
         await _gitUtil.CommitAndPush(gitDirectory, "Updates hash for new version", token, name, email, cancellationToken)
                       .NoSync();
     }
 
-    public async ValueTask SaveHashToGitRepoAsFile(string gitDirectory, string newHash, string fileName, string hashFileName, string name, string email, string username, string token,
-        CancellationToken cancellationToken = default)
+    public async ValueTask SaveHashToGitRepoAsFile(string gitDirectory, string libraryName, string newHash, string fileName, string hashFileName, string name,
+        string email, string username, string token, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Saving hash to Git repo...");
 
         // Write new hash
         string targetHashFile = Path.Combine(gitDirectory, hashFileName);
-        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken).NoSync();
-        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
+        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken)
+                       .NoSync();
+        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken)
+                       .NoSync();
 
         // Clean up the resource file from the repo
-        string resourceFile = Path.Combine(gitDirectory, "src", "Resources", fileName);
-        await _fileUtil.DeleteIfExists(resourceFile, cancellationToken: cancellationToken).NoSync();
+        string resourceFile = Path.Combine(gitDirectory, "src", libraryName, "Resources", fileName);
+        await _fileUtil.DeleteIfExists(resourceFile, cancellationToken: cancellationToken)
+                       .NoSync();
 
         // Stage the new hash file
-        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
+        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken)
+                      .NoSync();
 
         await _gitUtil.CommitAndPush(gitDirectory, "Updates hash for new version", token, name, email, cancellationToken)
                       .NoSync();
     }
 
-    public async ValueTask SaveHashToGitRepoAsDirectory(string gitDirectory, string newHash, string targetDir, string hashFileName, string name, string email, string username, string token,
-        CancellationToken cancellationToken = default)
+    public async ValueTask SaveHashToGitRepoAsDirectory(string gitDirectory, string newHash, string targetDir, string hashFileName, string name, string email,
+        string username, string token, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Saving hash to Git repo...");
 
         // Write new hash
         string targetHashFile = Path.Combine(gitDirectory, hashFileName);
-        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken).NoSync();
-        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken).NoSync();
+        await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken)
+                       .NoSync();
+        await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken)
+                       .NoSync();
 
-        _directoryUtil.Delete(targetDir);
+        await _directoryUtil.Delete(targetDir, cancellationToken);
 
         // Stage the new hash file
-        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken).NoSync();
+        await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken)
+                      .NoSync();
 
         await _gitUtil.CommitAndPush(gitDirectory, "Updates hash for new version", token, name, email, cancellationToken)
                       .NoSync();
