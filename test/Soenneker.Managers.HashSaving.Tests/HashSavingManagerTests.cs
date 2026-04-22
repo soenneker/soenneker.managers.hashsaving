@@ -1,20 +1,19 @@
 using Soenneker.Managers.HashSaving.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Managers.HashSaving.Tests;
 
-[Collection("Collection")]
-public class HashSavingManagerTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class HashSavingManagerTests : HostedUnitTest
 {
     private readonly IHashSavingManager _util;
 
-    public HashSavingManagerTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public HashSavingManagerTests(Host host) : base(host)
     {
         _util = Resolve<IHashSavingManager>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
