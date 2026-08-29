@@ -14,6 +14,8 @@ public static class HashSavingManagerRegistrar
     /// <summary>
     /// Adds <see cref="IHashSavingManager"/> as a singleton service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddHashSavingManagerAsSingleton(this IServiceCollection services)
     {
         services.AddFileUtilAsSingleton()
@@ -26,6 +28,8 @@ public static class HashSavingManagerRegistrar
     /// <summary>
     /// Adds <see cref="IHashSavingManager"/> as a scoped service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddHashSavingManagerAsScoped(this IServiceCollection services)
     {
         services.AddFileUtilAsScoped()
