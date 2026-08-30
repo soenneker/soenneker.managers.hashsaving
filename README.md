@@ -5,7 +5,7 @@
 
 # Soenneker.Managers.HashSaving
 
-Handles hashing and saving.
+Writes a precomputed hash into a repository checkout, optionally removes packaged resources, then commits and pushes the change.
 
 ## Install
 
@@ -13,17 +13,29 @@ Handles hashing and saving.
 dotnet add package Soenneker.Managers.HashSaving
 ```
 
-## Quick start
+## Usage
 
 ```csharp
-using Soenneker.Managers.HashSaving.Registrars;
 using Microsoft.Extensions.DependencyInjection;
+using Soenneker.Managers.HashSaving.Abstract;
+using Soenneker.Managers.HashSaving.Registrars;
 
-var services = new ServiceCollection();
-var result = services.AddHashSavingManagerAsSingleton();
+services.AddHashSavingManagerAsSingleton();
+
+IHashSavingManager hashes =
+    serviceProvider.GetRequiredService<IHashSavingManager>();
+
+await hashes.SaveHashToGitRepoWithoutClearingResources(
+    gitDirectory: repositoryPath,
+    newHash: verifiedHash,
+    hashFileName: "hash.txt",
+    name: "Automation",
+    email: "automation@example.com",
+    token: githubToken,
+    cancellationToken);
 ```
 
-Adds `IHashSavingManager` as a singleton service.
+Each method writes the hash and immediately commits and pushes all working-tree changes using the message `Updates hash for new version`. Use it only with a disposable, dedicated checkout whose complete contents are intended for that commit.
 
 ## What you get
 
@@ -42,4 +54,9 @@ Adds `IHashSavingManager` as a singleton service.
 
 ## Practical notes
 
-- Cancellation stops pending work; it does not undo work that has already completed.
+- `SaveHashToGitRepoWithoutClearingResources()` leaves packaged resources in place.
+- `SaveHashToGitRepoAsFile()` deletes `src/<libraryName>/Resources/<fileName>` before committing.
+- `SaveHashToGitRepoAsDirectory()` deletes the supplied resource directory before committing.
+- Hash and resource paths are required to remain inside `gitDirectory`; traversal and outside paths are rejected before deletion.
+- `username` is retained for API compatibility but is not used. `name` and `email` set commit attribution; `token` authenticates the push.
+- Cancellation can stop the operation between local mutation, commit, and push. Run recovery or discard the dedicated checkout rather than assuming rollback.

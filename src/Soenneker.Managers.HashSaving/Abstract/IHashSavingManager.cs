@@ -32,7 +32,7 @@ public interface IHashSavingManager
     /// <param name="hashFileName">Name of the hash file to target.</param>
     /// <param name="name">Name of the Hash Saving Manager value to target.</param>
     /// <param name="email">Email address to validate or query.</param>
-    /// <param name="username">Receives the decoded username when parsing succeeds.</param>
+    /// <param name="username">Reserved for compatibility; this implementation does not use it.</param>
     /// <param name="token">Arbitrary utility token to append.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
     /// <returns>A task that completes when the hash to git repo as file has been saved.</returns>
@@ -48,7 +48,7 @@ public interface IHashSavingManager
     /// <param name="hashFileName">Name of the hash file to target.</param>
     /// <param name="name">Name of the Hash Saving Manager value to target.</param>
     /// <param name="email">Email address to validate or query.</param>
-    /// <param name="username">Receives the decoded username when parsing succeeds.</param>
+    /// <param name="username">Reserved for compatibility; this implementation does not use it.</param>
     /// <param name="token">Arbitrary utility token to append.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
     /// <returns>A task that completes when the hash to git repo as directory has been saved.</returns>

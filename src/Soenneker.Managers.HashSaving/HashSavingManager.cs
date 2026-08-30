@@ -11,7 +11,6 @@ using Soenneker.Utils.Directory.Abstract;
 
 namespace Soenneker.Managers.HashSaving;
 
-/// <inheritdoc cref="IHashSavingManager"/>
 public sealed class HashSavingManager : IHashSavingManager
 {
     private readonly ILogger<HashSavingManager> _logger;
@@ -32,7 +31,7 @@ public sealed class HashSavingManager : IHashSavingManager
     {
         _logger.LogInformation("Saving hash to Git repo...");
 
-        string targetHashFile = Path.Combine(gitDirectory, hashFileName);
+        string targetHashFile = GetPathWithin(gitDirectory, hashFileName, "Hash file");
         await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken)
                        .NoSync();
         await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken)
@@ -51,14 +50,14 @@ public sealed class HashSavingManager : IHashSavingManager
         _logger.LogInformation("Saving hash to Git repo...");
 
         // Write new hash
-        string targetHashFile = Path.Combine(gitDirectory, hashFileName);
+        string targetHashFile = GetPathWithin(gitDirectory, hashFileName, "Hash file");
         await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken)
                        .NoSync();
         await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken)
                        .NoSync();
 
         // Clean up the resource file from the repo
-        string resourceFile = Path.Combine(gitDirectory, "src", libraryName, "Resources", fileName);
+        string resourceFile = GetPathWithin(gitDirectory, Path.Combine("src", libraryName, "Resources", fileName), "Resource file");
         await _fileUtil.DeleteIfExists(resourceFile, cancellationToken: cancellationToken)
                        .NoSync();
 
@@ -76,13 +75,14 @@ public sealed class HashSavingManager : IHashSavingManager
         _logger.LogInformation("Saving hash to Git repo...");
 
         // Write new hash
-        string targetHashFile = Path.Combine(gitDirectory, hashFileName);
+        string targetHashFile = GetPathWithin(gitDirectory, hashFileName, "Hash file");
         await _fileUtil.DeleteIfExists(targetHashFile, cancellationToken: cancellationToken)
                        .NoSync();
         await _fileUtil.Write(targetHashFile, newHash, true, cancellationToken)
                        .NoSync();
 
-        await _directoryUtil.Delete(targetDir, cancellationToken);
+        string resourceDirectory = GetPathWithin(gitDirectory, targetDir, "Resource directory");
+        await _directoryUtil.Delete(resourceDirectory, cancellationToken);
 
         // Stage the new hash file
         await _gitUtil.AddIfNotExists(gitDirectory, targetHashFile, cancellationToken)
@@ -90,5 +90,17 @@ public sealed class HashSavingManager : IHashSavingManager
 
         await _gitUtil.CommitAndPush(gitDirectory, "Updates hash for new version", token, name, email, cancellationToken)
                       .NoSync();
+    }
+
+    private static string GetPathWithin(string gitDirectory, string path, string description)
+    {
+        string root = Path.GetFullPath(gitDirectory);
+        string candidate = Path.GetFullPath(path, root);
+        string rootPrefix = Path.TrimEndingDirectorySeparator(root) + Path.DirectorySeparatorChar;
+
+        if (!candidate.StartsWith(rootPrefix, System.StringComparison.OrdinalIgnoreCase))
+            throw new System.InvalidOperationException($"{description} must be located within the Git directory.");
+
+        return candidate;
     }
 }
