@@ -11,6 +11,7 @@ using Soenneker.Utils.Directory.Abstract;
 
 namespace Soenneker.Managers.HashSaving;
 
+/// <inheritdoc cref="IHashSavingManager" />
 public sealed class HashSavingManager : IHashSavingManager
 {
     private readonly ILogger<HashSavingManager> _logger;
