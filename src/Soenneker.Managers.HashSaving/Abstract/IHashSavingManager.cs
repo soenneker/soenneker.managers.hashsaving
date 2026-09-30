@@ -18,9 +18,10 @@ public interface IHashSavingManager
     /// <param name="email">Email address to validate or query.</param>
     /// <param name="token">Arbitrary utility token to append.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <param name="version">Optional upstream version to include in the commit message.</param>
     /// <returns>A task that completes when the hash to git repo without clearing resources has been saved.</returns>
     ValueTask SaveHashToGitRepoWithoutClearingResources(string gitDirectory, string newHash, string hashFileName, string name, string email, string token,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, string? version = null);
 
     /// <summary>
     /// Saves hash To Git Repo As File.
@@ -35,9 +36,10 @@ public interface IHashSavingManager
     /// <param name="username">Reserved for compatibility; this implementation does not use it.</param>
     /// <param name="token">Arbitrary utility token to append.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <param name="version">Optional upstream version to include in the commit message.</param>
     /// <returns>A task that completes when the hash to git repo as file has been saved.</returns>
     ValueTask SaveHashToGitRepoAsFile(string gitDirectory, string libraryName, string newHash, string fileName, string hashFileName, string name, string email, string username,
-        string token, CancellationToken cancellationToken = default);
+        string token, CancellationToken cancellationToken = default, string? version = null);
 
     /// <summary>
     /// Saves hash To Git Repo As Directory.
@@ -51,7 +53,8 @@ public interface IHashSavingManager
     /// <param name="username">Reserved for compatibility; this implementation does not use it.</param>
     /// <param name="token">Arbitrary utility token to append.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <param name="version">Optional upstream version to include in the commit message.</param>
     /// <returns>A task that completes when the hash to git repo as directory has been saved.</returns>
     ValueTask SaveHashToGitRepoAsDirectory(string gitDirectory, string newHash, string targetDir, string hashFileName, string name, string email,
-        string username, string token, CancellationToken cancellationToken = default);
+        string username, string token, CancellationToken cancellationToken = default, string? version = null);
 }
